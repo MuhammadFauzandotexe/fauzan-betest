@@ -1,0 +1,32 @@
+version: '3.1'
+
+networks:
+  redis-network:
+    driver: bridge
+  mongo-network:
+    driver: bridge
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    networks:
+      - mongo-network
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    networks:
+      - redis-network
+  service:
+    build: .
+    container_name: service
+    depends_on:
+      - redis
+      - mongo
+    ports:
+      - "3000:3000"
+    networks:
+      - mongo-network
+      - redis-network
+
